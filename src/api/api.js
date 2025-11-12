@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "http://obligatorio-1-dfs.vercel.app/"
+    baseURL: "https://obligatorio-1-dfs.vercel.app/"
 });
 
 api.interceptors.request.use((config) => {
