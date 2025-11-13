@@ -108,13 +108,13 @@ const FormPelicula = () => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                    <label htmlFor={nombrId}>{t("registrarPelicula")}</label>
+                    <label htmlFor={nombrId}>{t("nombrePelicula")}</label>
                     <input type="text" className="form-control" id={nombrId} {...register("nombre")} />
                     <span className="error">{errors.nombre?.message}</span>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor={descripcionId}>{t("nombrePelicula")}</label>
+                    <label htmlFor={descripcionId}>{t("descripcion")}</label>
                     <input type="text" className="form-control" id={descripcionId} {...register("descripcion")} />
                     <span className="error">{errors.descripcion?.message}</span>
                 </div>
