@@ -106,11 +106,20 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
 
             const response = await api.patch(`v1/peliculas/${pelicula._id}`, peliculaActualizada);
             
-            //const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha ? peliculaActualizada.fecha.toString() : pelicula.fecha};
-            const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha || pelicula.fecha};
-
+            const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha ? peliculaActualizada.fecha.toString() : pelicula.fecha};
 
             dispatch(actualizarPelicula({ pelicula: peliculaConId }));
+
+            // Recargar todos los datos desde la API para asegurar sincronización
+            try {
+                const peliculasSeriesResponse = await api.get('v1/usuarios/peliculas-series');
+                if (peliculasSeriesResponse.data) {
+                    const { guardarPeliculas } = await import('../../features/pelicula.slice');
+                    dispatch(guardarPeliculas(peliculasSeriesResponse.data.peliculas));
+                }
+            } catch (reloadError) {
+                console.warn('Error recargando datos:', reloadError);
+            }
 
             toast.success('Película actualizada correctamente');
             onClose();

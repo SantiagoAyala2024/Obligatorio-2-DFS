@@ -105,10 +105,20 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
         try {
             const response = await api.patch(`v1/series/${serie._id}`, serieActualizada);
             
-            //const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha ? serieActualizada.fecha.toString() : serie.fecha};
-            const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha || serie.fecha};
+            const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha ? serieActualizada.fecha.toString() : serie.fecha};
 
             dispatch(actualizarSerie({ serie: serieConId }));
+
+            // Recargar todos los datos desde la API para asegurar sincronización
+            try {
+                const peliculasSeriesResponse = await api.get('v1/usuarios/peliculas-series');
+                if (peliculasSeriesResponse.data) {
+                    const { guardarSeries } = await import('../../features/serie.slice');
+                    dispatch(guardarSeries(peliculasSeriesResponse.data.series));
+                }
+            } catch (reloadError) {
+                console.warn('Error recargando datos:', reloadError);
+            }
 
             toast.success('Serie actualizada correctamente');
             onClose();
