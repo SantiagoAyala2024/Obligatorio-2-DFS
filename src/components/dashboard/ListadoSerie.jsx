@@ -44,7 +44,7 @@ const ListadoSerie = () => {
 
             let fechaSerie;
             try {
-                if (serie.fecha.includes('T')) {
+                /*if (serie.fecha.includes('T')) {
                     const soloFecha = serie.fecha.split('T')[0];
                     const [año, mes, dia] = soloFecha.split('-');
                     fechaSerie = new Date(año, mes - 1, dia);
@@ -52,6 +52,25 @@ const ListadoSerie = () => {
                     const [año, mes, dia] = serie.fecha.split('-');
                     fechaSerie = new Date(año, mes - 1, dia);
                 }
+                */
+                if (serie.fecha instanceof Date) {
+                    fechaSerie = serie.fecha;
+                }
+                else if (typeof serie.fecha === 'string') {
+                    if (serie.fecha.includes('T')) {
+                        const soloFecha = serie.fecha.split('T')[0];
+                        const [año, mes, dia] = soloFecha.split('-');
+                        fechaSerie = new Date(año, mes - 1, dia);
+                    } else {
+                        const [año, mes, dia] = serie.fecha.split('-');
+                        fechaSerie = new Date(año, mes - 1, dia);
+                    }
+                }
+                else {
+                    fechaSerie = new Date(serie.fecha);
+                }
+
+                
             } catch (error) {
                 fechaSerie = new Date(serie.fecha);
             }

@@ -45,7 +45,8 @@ const ListadoPelicula = () => {
 
             let fechaPelicula;
             try {
-                if (pelicula.fecha.includes('T')) {
+
+                /*if (pelicula.fecha.includes('T')) {
                     const soloFecha = pelicula.fecha.split('T')[0];
                     const [año, mes, dia] = soloFecha.split('-');
                     fechaPelicula = new Date(año, mes - 1, dia);
@@ -53,6 +54,24 @@ const ListadoPelicula = () => {
                     const [año, mes, dia] = pelicula.fecha.split('-');
                     fechaPelicula = new Date(año, mes - 1, dia);
                 }
+                */
+                if (pelicula.fecha instanceof Date) {
+                    fechaPelicula = pelicula.fecha;
+                }
+                else if (typeof pelicula.fecha === 'string') {
+                    if (pelicula.fecha.includes('T')) {
+                        const soloFecha = pelicula.fecha.split('T')[0];
+                        const [año, mes, dia] = soloFecha.split('-');
+                        fechaPelicula = new Date(año, mes - 1, dia);
+                    } else {
+                        const [año, mes, dia] = pelicula.fecha.split('-');
+                        fechaPelicula = new Date(año, mes - 1, dia);
+                    }
+                }
+                else {
+                    fechaPelicula = new Date(pelicula.fecha);
+                }
+
             } catch (error) {
                 fechaPelicula = new Date(pelicula.fecha);
             }
