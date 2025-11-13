@@ -106,8 +106,10 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
 
             const response = await api.patch(`v1/peliculas/${pelicula._id}`, peliculaActualizada);
             
-            const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha ? peliculaActualizada.fecha.toString() : pelicula.fecha};
-            
+            //const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha ? peliculaActualizada.fecha.toString() : pelicula.fecha};
+            const peliculaConId = {...pelicula, ...peliculaActualizada, _id: pelicula._id, fecha: peliculaActualizada.fecha || pelicula.fecha};
+
+
             dispatch(actualizarPelicula({ pelicula: peliculaConId }));
 
             toast.success('Película actualizada correctamente');

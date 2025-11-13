@@ -105,8 +105,9 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
         try {
             const response = await api.patch(`v1/series/${serie._id}`, serieActualizada);
             
-            const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha ? serieActualizada.fecha.toString() : serie.fecha};
-           
+            //const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha ? serieActualizada.fecha.toString() : serie.fecha};
+            const serieConId = {...serie, ...serieActualizada, _id: serie._id, fecha: serieActualizada.fecha || serie.fecha};
+
             dispatch(actualizarSerie({ serie: serieConId }));
 
             toast.success('Serie actualizada correctamente');
