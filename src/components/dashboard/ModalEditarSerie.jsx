@@ -111,6 +111,11 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
 
             toast.success('Serie actualizada correctamente');
             onClose();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500); 
+
         } catch (error) {
             console.error('Error al actualizar la serie:', error);
             toast.error('Error al actualizar la serie. Revisa la consola para más detalles.');
