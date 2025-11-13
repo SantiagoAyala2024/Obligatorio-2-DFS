@@ -59,7 +59,7 @@ export const actualizarSerieSchema = Joi.object({
     imagen: Joi.any()
         .custom((value, helpers) => {
             if (!value || value.length === 0) {
-                return helpers.error("any.required");
+                return value;
             }
             const file = value[0];
             const validTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -72,7 +72,6 @@ export const actualizarSerieSchema = Joi.object({
             return value;
         })
         .messages({
-            "any.required": "La imagen es obligatoria",
             "any.invalid": "Archivo inválido (solo JPG, PNG, WEBP)",
             "any.max": "La imagen no puede superar 2MB"
         }),

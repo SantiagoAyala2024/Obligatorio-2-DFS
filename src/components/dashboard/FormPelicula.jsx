@@ -74,7 +74,6 @@ const FormPelicula = () => {
             return;
         }
 
-        console.log(data);
         setLoading(true);
 
         const pelicula = {

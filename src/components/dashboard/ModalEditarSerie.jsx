@@ -81,17 +81,22 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
         
         if (!serie?._id) return;
         
-        const file = data.imagen[0];
+        setLoading(true);
 
-        const url = await subirImagen(file);
+        let url = serie.url;
+        
+        if (data.imagen && data.imagen.length > 0 && data.imagen[0]) {
+            const file = data.imagen[0];
+            const nuevaUrl = await subirImagen(file);
             
-        if (!url) {
-            alert("Error subiendo la imagen");
-            return;
+            if (!nuevaUrl) {
+                alert("Error subiendo la imagen");
+                setLoading(false);
+                return;
+            }
+            url = nuevaUrl;
         }
 
-        console.log(data);
-        setLoading(true);
 
         const serieActualizada = {
             nombre: data.nombre,
@@ -109,7 +114,6 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
 
             dispatch(actualizarSerie({ serie: serieConId }));
 
-            // Recargar todos los datos desde la API para asegurar sincronización
             try {
                 const peliculasSeriesResponse = await api.get('v1/usuarios/peliculas-series');
                 if (peliculasSeriesResponse.data) {
@@ -226,7 +230,18 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
                         </div>
 
                         <div className='form-group'>
-                            <label>Imagen</label>
+                            <label>Imagen {serie?.url && <span style={{color: '#666', fontSize: '0.9rem'}}>(opcional - deja vacío para mantener la actual)</span>}</label>
+                            {serie?.url && (
+                                <div style={{ marginBottom: "15px" }}>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>Imagen actual:</p>
+                                    <img 
+                                        src={serie.url.replace('/upload/', '/upload/c_scale,w_200/f_auto/q_auto/')} 
+                                        alt="Imagen actual" 
+                                        width="150"
+                                        style={{ borderRadius: '8px', border: '1px solid #ddd' }}
+                                    />
+                                </div>
+                            )}
                             <input type="file" accept="image/*" {...register("imagen")} />
                             <span className="error">{errors.imagen?.message}</span>
 
@@ -234,7 +249,8 @@ const ModalEditarSerie = ({ serie, isOpen, onClose }) => {
 
                             {imagenUrl && (
                                 <div style={{ marginTop: "10px" }}>
-                                    <img src={imagenUrl.replace('/upload/', '/upload/c_scale,w_300/f_auto/q_auto/')} alt="preview" width="200"/>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>Nueva imagen:</p>
+                                    <img src={imagenUrl.replace('/upload/', '/upload/c_scale,w_200/f_auto/q_auto/')} alt="preview" width="150" style={{ borderRadius: '8px', border: '1px solid #ddd' }}/>                                
                                 </div>
                             )}
                         </div>

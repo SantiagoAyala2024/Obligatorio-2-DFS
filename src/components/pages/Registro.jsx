@@ -34,7 +34,6 @@ const Registro = () => {
 
     const onSubmit = (data) => {
         
-        console.log(data);
         setLoading(true);
 
         const usuario = {

@@ -30,7 +30,6 @@ const Login = () => {
 
     const onSubmit = (data) => {
         
-        console.log(data);
         setLoading(true);
 
         const usuarioLogueado = {

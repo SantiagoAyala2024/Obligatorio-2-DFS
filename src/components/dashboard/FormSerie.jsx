@@ -74,7 +74,6 @@ const FormSerie = () => {
             return;
         }
 
-        console.log(data);
         setLoading(true);
 
         const serie = {

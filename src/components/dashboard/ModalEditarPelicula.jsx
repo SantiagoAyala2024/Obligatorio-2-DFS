@@ -80,18 +80,22 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
     const onSubmit = async (data) => {
 
         if (!pelicula?._id) return;
-        
-        const file = data.imagen[0];
-
-        const url = await subirImagen(file);
-            
-        if (!url) {
-            alert("Error subiendo la imagen");
-            return;
-        }
-
-        console.log(data);
+    
         setLoading(true);
+
+        let url = pelicula.url;
+        
+        if (data.imagen && data.imagen.length > 0 && data.imagen[0]) {
+            const file = data.imagen[0];
+            const nuevaUrl = await subirImagen(file);
+            
+            if (!nuevaUrl) {
+                alert("Error subiendo la imagen");
+                setLoading(false);
+                return;
+            }
+            url = nuevaUrl;
+        }
 
         const peliculaActualizada = {
             nombre: data.nombre,
@@ -110,7 +114,6 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
 
             dispatch(actualizarPelicula({ pelicula: peliculaConId }));
 
-            // Recargar todos los datos desde la API para asegurar sincronización
             try {
                 const peliculasSeriesResponse = await api.get('v1/usuarios/peliculas-series');
                 if (peliculasSeriesResponse.data) {
@@ -227,7 +230,19 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
                         </div>
 
                         <div className='form-group'>
-                            <label>Imagen</label>
+                            <label>Imagen {pelicula?.url && <span style={{color: '#666', fontSize: '0.9rem'}}>(opcional - deja vacío para mantener la actual)</span>}</label>
+                            
+                            {pelicula?.url && (
+                                <div style={{ marginBottom: "15px" }}>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>Imagen actual:</p>
+                                    <img 
+                                        src={pelicula.url.replace('/upload/', '/upload/c_scale,w_200/f_auto/q_auto/')} 
+                                        alt="Imagen actual" 
+                                        width="150"
+                                        style={{ borderRadius: '8px', border: '1px solid #ddd' }}
+                                    />
+                                </div>
+                            )}
                             <input type="file" accept="image/*" {...register("imagen")} />
                             <span className="error">{errors.imagen?.message}</span>
 
@@ -235,7 +250,8 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
 
                             {imagenUrl && (
                                 <div style={{ marginTop: "10px" }}>
-                                    <img src={imagenUrl.replace('/upload/', '/upload/c_scale,w_300/f_auto/q_auto/')} alt="preview" width="200"/>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>Nueva imagen:</p>
+                                    <img src={imagenUrl.replace('/upload/', '/upload/c_scale,w_200/f_auto/q_auto/')} alt="preview" width="150" style={{ borderRadius: '8px', border: '1px solid #ddd' }}/>                                
                                 </div>
                             )}
                         </div>
