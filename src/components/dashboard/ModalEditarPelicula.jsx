@@ -113,10 +113,6 @@ const ModalEditarPelicula = ({ pelicula, isOpen, onClose }) => {
             toast.success('Película actualizada correctamente');
             onClose();
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500); 
-
         } catch (error) {
             console.error('Error al actualizar la película:', error);
             toast.error('Error al actualizar la película. Revisa la consola para más detalles.');
